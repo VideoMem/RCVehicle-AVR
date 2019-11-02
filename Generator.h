@@ -19,7 +19,7 @@ class Generator {
         bool false_warmup();    //halt generator
         bool lineStatus;
    protected:
-        Manchester manSerial;               
+        Manchester mapSerial;
 };  
 
 

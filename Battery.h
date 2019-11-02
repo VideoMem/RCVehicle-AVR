@@ -8,7 +8,7 @@
 #define BATTERY_VERSION "0"
 #include "Module.h"
 #include "Timers.h"
-#include "Manchester.h"
+#include "MapSerial.h"
 
 //input pin
 #define VBATPIN A0
@@ -17,9 +17,9 @@
 //minimum charging voltage (volts)
 #define MINIMAL_V_LEVEL 12.4
 
-class Battery: public Module {
+class Battery: public MapSerial {
     public: 
-        Battery();
+        Battery(Manchester* s);
         void update();
         float value();
         bool alarm();
@@ -28,10 +28,8 @@ class Battery: public Module {
     protected:
         float vBat = 0;
         Timer batTimer;
-        Manchester manSerial;
     private:
         void setup();
-
         void logAlarm();
 };
 

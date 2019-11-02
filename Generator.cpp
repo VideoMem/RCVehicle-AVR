@@ -31,9 +31,9 @@ bool Generator::in_halt() {
 
 void Generator::update(bool startS, bool started) {
     /*if(cycleTimer.event()) {
-        manSerial.print("Generator event: ");
-        manSerial.print(cycleTimer.state());
-        manSerial.print("\n");
+        mapSerial.print("Generator event: ");
+        mapSerial.print(cycleTimer.state());
+        mapSerial.print("\n");
     }*/
     lineStatus = startS;
     switch(cycleTimer.state()) {

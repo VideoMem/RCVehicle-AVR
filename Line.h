@@ -48,7 +48,7 @@
 
 class Line {
     public:
-        Line();
+        Line(const Manchester *s);
         bool genStart();
         bool genStarted();
         bool genConnect();
@@ -83,7 +83,7 @@ class Line {
         void samplePhase();
         void changePhase();
     protected:
-        Manchester manSerial;
+        Manchester* mapSerial;
 };
 
 #endif

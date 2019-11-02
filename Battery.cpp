@@ -6,7 +6,7 @@ void Battery::setup() {
     batTimer.reset();
 }
 
-Battery::Battery() {
+Battery::Battery(Manchester* s):MapSerial(s) {
     setup();
 }
 
@@ -24,14 +24,14 @@ void Battery::check() {
 }
 
 void Battery::logAlarm() {
-    manSerial.print("vBat LOW!\n");
+    mapSerial->print("vBat LOW!\n");
 }
 
 
 void Battery::logValue() {
-    manSerial.print("vBat: ");
-    manSerial.print(vBat);  
-    manSerial.print("\n");  
+    mapSerial->print("vBat: ");
+    mapSerial->print(vBat);
+    mapSerial->print("\n");
 }
 
 void Battery::update() {

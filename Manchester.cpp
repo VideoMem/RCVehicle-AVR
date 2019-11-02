@@ -1,6 +1,97 @@
 #include "Manchester.h"
 #include <Arduino.h>
 
+char Manchester::read() {
+    char nonDir[2];
+    if(getDirect()) {
+        return Serial.read();
+    } else {
+        nonDir[0] = Serial.read();
+        nonDir[1] = Serial.read();
+        return decode(nonDir);
+   }
+}
+
+unsigned char* Manchester::encode(unsigned char byte) {
+    table(byte);
+    return buffer;
+}
+
+unsigned char Manchester::decode(const char* encoded) {
+    unsigned char decoded = Rtable(encoded[0], encoded[1]);    
+    return decoded;
+}
+
+void Manchester::print(const char* string) {
+    if(!direct) {
+        const char* byte = string;
+        for(byte = string; *byte; ++byte) {
+            table((unsigned char) *byte);
+            Serial.write(buffer[0]);
+            Serial.write(buffer[1]);
+        }
+    } else {
+        Serial.write(string);
+    }
+}
+
+void Manchester::print(char arg) {
+    if(!direct) {
+        table((unsigned char) arg);
+        Serial.write(buffer[0]);
+        Serial.write(buffer[1]);
+    } else
+        Serial.write(arg);
+}
+
+void Manchester::print(float arg) {
+    char charVal[10]; 
+    dtostrf(arg, 4, 3, charVal);
+    print(charVal);
+}
+
+void Manchester::print(int arg) {
+    char charVal[10]; 
+    dtostrf(arg, 1, 0, charVal);
+    print(charVal);
+}
+
+void Manchester::print(unsigned long arg) {
+    char charVal[20];
+    ultoa(arg, charVal, 10);
+    print(charVal);
+}
+
+void Manchester::print(long arg) {
+    char charVal[20];
+    ltoa(arg, charVal, 10);
+    print(charVal);
+}
+
+void Manchester::print(volatile uint16_t& arg) {
+    char charVal[20];
+    unsigned int v = arg;
+    utoa(v, charVal, 10);
+    print(charVal);
+}
+
+void Manchester::print(unsigned char arg) {
+    int v = (int) arg;
+    print(v);
+}
+
+void Manchester::printn(const char* arg) {
+    print(arg);
+    print("\n");
+}
+
+void Manchester::printn(const char* arg, float val) {
+    print(arg);
+    print(val);
+    print("\n");
+}
+
+
 void Manchester::table(unsigned char index) {
     unsigned char buf[2];
 
@@ -2317,40 +2408,3 @@ unsigned char Manchester::Rtable(unsigned char a, unsigned char b) {
 
     return 0;
 }
-
-unsigned char* Manchester::encode(unsigned char byte) {
-    table(byte);
-    return buffer;
-}
-
-unsigned char Manchester::decode(unsigned char* encoded) {
-    unsigned char decoded = Rtable(encoded[0], encoded[1]);    
-    return decoded;
-}
-
-void Manchester::print(const char* string) {
-    const char* byte = string;
-    for(byte = string; *byte; ++byte) {
-        table((unsigned char) *byte);
-        Serial.write(buffer[0]);
-        Serial.write(buffer[1]);
-    }
-}
-
-void Manchester::print(float arg) {
-    char charVal[10]; 
-    dtostrf(arg, 4, 3, charVal);
-    print(charVal);
-}
-
-void Manchester::print(int arg) {
-    char charVal[10]; 
-    dtostrf(arg, 1, 0, charVal);
-    print(charVal);
-}
-
-
-
-
-
-

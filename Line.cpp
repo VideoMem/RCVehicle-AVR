@@ -78,18 +78,19 @@ bool Line::halt() {
 }
 
 void Line::generatorMSG() {
-    manSerial.print("No power present at the mains, starting generator ...\n");
+    mapSerial->print("No power present at the mains, starting generator ...\n");
 }
 
 void Line::mainsMSG() {
-    manSerial.print("Power present, reconnecting to the mains ...\n");          
+    mapSerial->print("Power present, reconnecting to the mains ...\n");
 }
 
 void Line::abnormalMSG() {
-    manSerial.print("Abnormal power input!\n");
+    mapSerial->print("Abnormal power input!\n");
 }
 
-Line::Line() {
+Line::Line(const Manchester* s) {
+    mapSerial = s;
     setup();    
 }
 
@@ -104,23 +105,23 @@ void Line::outVoltages() {
     unsigned char i = 0;
  
     for(i=0; i < LINES; i++) {
-        manSerial.print("Voltage ");
+        mapSerial->print("Voltage ");
         switch(i) {
             case 0:
-                manSerial.print("phase R: ");
+                mapSerial->print("phase R: ");
             break;
             case 1:
-                manSerial.print("phase S: ");
+                mapSerial->print("phase S: ");
             break;
             case 2:
-                manSerial.print("phase T: ");
+                mapSerial->print("phase T: ");
             break;
             case 3:
-                manSerial.print("phase G: ");
+                mapSerial->print("phase G: ");
             break;
         }
-        manSerial.print(voltages[i]);
-        manSerial.print("V\n");
+        mapSerial->print(voltages[i]);
+        mapSerial->print("V\n");
     } 
 }
 
@@ -205,9 +206,9 @@ void Line::phaseUpdate() {
     for(i=0; i < LINES; i++) {
         if (status[i] == DIS) {
             j = i + 1;
-            manSerial.print("Phase ");
-            manSerial.print(j);
-            manSerial.print(": disconnected\n");       
+            mapSerial->print("Phase ");
+            mapSerial->print(j);
+            mapSerial->print(": disconnected\n");
         }
     }
     

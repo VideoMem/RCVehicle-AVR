@@ -19,6 +19,7 @@ class Timer {
    unsigned long valueMS();
    unsigned long valueS();
    int event();
+   unsigned long value() { return elapsed; }
    
  private:
   void check();
