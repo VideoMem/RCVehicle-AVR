@@ -2,61 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pty.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pty.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StringBuffer.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/StringBuffer.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VFD.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VFD.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/avr_utils.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex.sizeok" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build-nano328/simavr.c.d" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build-nano328/simavr.c.o" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build_simavr_bind.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simavr.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simavr.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Battery.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Battery.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Battery.h" beforeDir="false" afterPath="$PROJECT_DIR$/Battery.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ContactorControl.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ContactorControl.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Generator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Generator.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/Generator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Line.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Line.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Line.h" beforeDir="false" afterPath="$PROJECT_DIR$/Line.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manchester.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Manchester.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manchester.h" beforeDir="false" afterPath="$PROJECT_DIR$/Manchester.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/HotAnalogRead.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead-cache.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead-rescue.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.bak" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.dsn" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.kicad_pcb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.kicad_pcb-bak" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.net" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/IsolatedAnalogRead.sch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/OSC1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/OSC1.xcf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/OptoDriverPCB.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/lib.pretty/D_DO-41_SOD81_P7.62mm_Horizontal_PinsReversed.kicad_mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/rescue-backup/IsolatedAnalogRead-2018-08-12-12-33-06.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/rescue-backup/IsolatedAnalogRead-2018-08-12-12-33-06.sch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/rescue-backup/IsolatedAnalogRead-cache-2018-08-12-12-33-06.lib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Schematics/sym-lib-table" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Timers.h" beforeDir="false" afterPath="$PROJECT_DIR$/Timers.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Battery.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Battery.cpp.d" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pty.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pty.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StringBuffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/StringBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VFD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/VFD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VFD.h" beforeDir="false" afterPath="$PROJECT_DIR$/VFD.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/ContactorControl.eep" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.eep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/ContactorControl.elf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/ContactorControl.hex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/ContactorControl.hex.sizeok" beforeDir="false" afterPath="$PROJECT_DIR$/MapSerial.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Line.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Line.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Manchester.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Manchester.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Timers.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Timers.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Toggle.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Toggle.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/core/CDC.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/CDC.cpp.o" afterDir="false" />
@@ -82,12 +45,9 @@
       <change beforePath="$PROJECT_DIR$/build-nano328/libcore.a" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/libcore.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build-nano328/simavr.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/simavr.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/console/console.py" beforeDir="false" afterPath="$PROJECT_DIR$/console/console.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/old/ModuleLoader.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old/compressor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Motor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/old/compressor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old/plc.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/old/plc.h" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

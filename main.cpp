@@ -4,7 +4,7 @@
 #include "Battery.h"
 #include "Manchester.h"
 #include "MapSerial.h"
-#include "VFD.h"
+//#include "VFD.h"
 #include "Pty.h"
 
 //#ifdef __cplusplus
@@ -27,24 +27,29 @@ static unsigned char error = 0;
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
-Motor* Motor::pointer;//
-volatile Motor mstate;
-volatile int counter = 0;
-VFD* Drive = new VFD(mapSerial);
-
-
-static char prompt[STRBUF_LEN];
-Pty* pty = new Pty(mapSerial, prompt);
+//Motor* Motor::pointer;//
+//volatile Motor mstate;
+//volatile int counter = 0;
+//VFD* Drive = new VFD(mapSerial);
+Pty* pty = new Pty(mapSerial); //, Drive);
 
 Toggle blinker;
 
-ISR (TIMER1_COMPA_vect) {
-    Motor::pointer->advance(0);
-}
+//ISR (TIMER1_COMPA_vect) {
+//    Motor::pointer->advance(0);
+//}
 
 
 void setup() {
+    pinMode(22, INPUT);
+    //mapSerial->printn("X ", code.x);
+    //mapSerial->printn("Y ", code.y);
     Serial.begin(BAUDRATE);
+    //while(true) {
+    //    if(Serial.available())
+    //        Serial.write(Serial.read());
+    //}
+
     mapSerial->setDirect(true);
     mapSerial->print("Initializing ... \n");
     pinMode(ledPin, OUTPUT);
@@ -53,7 +58,8 @@ void setup() {
 
 
     Serial.flush();
-    Drive->setup();
+  //  Drive->setup();
+    pty->gstatus();
     mapSerial->print("Done\n");
 }
 
@@ -79,16 +85,20 @@ void errorDrive() {
     }
 }
 
-void motorDrive() {
-    Drive->update();
-}
+//void motorDrive() {
+//    Drive->update();
+//}
 
 void loop() {
     ledDrive();
     battery.update();
     errorDrive();
-    motorDrive();
+    //motorDrive();
     pty->update();
+    //pty->gcode(code);
+    //if(pty->getLast() == 98) {
+    //    battery.check();
+    //}
 }
 
 int main(void) {

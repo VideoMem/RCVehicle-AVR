@@ -39,7 +39,7 @@ def prompt():
             print_help()
 
         if exec_command:
-            print man.send(command)
+            print man.send(command + "\n")
 
 def echo():
     global exit_flag

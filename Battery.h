@@ -11,11 +11,11 @@
 #include "MapSerial.h"
 
 //input pin
-#define VBATPIN A0
+#define VBATPIN A7
 //sampling interval (s)
 #define BATSAMP 60
 //minimum charging voltage (volts)
-#define MINIMAL_V_LEVEL 12.4
+#define MINIMAL_V_LEVEL 6
 
 class Battery: public MapSerial {
     public: 

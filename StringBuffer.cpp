@@ -1,12 +1,12 @@
 #include "StringBuffer.h"
 
-StringBuffer::StringBuffer(char* p) {
-    buff = p;
+StringBuffer::StringBuffer() {
     clear();
 }
 
 void StringBuffer::blank() {
-    memset(buff, 0, sizeof(buff));
+    //buff[0] = 0;
+    memset(buff, 0, STRBUF_LEN);
 }
 
 void StringBuffer::clear() {
@@ -24,4 +24,5 @@ void StringBuffer::add(char str) {
 
 void StringBuffer::del() {
     if (idx > 0) --idx;
+    buff[idx] = 0; //null term
 }

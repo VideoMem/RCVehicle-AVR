@@ -4,17 +4,16 @@
 
 class StringBuffer {
     public:
-        StringBuffer(char* p);
+        StringBuffer();
         void add(char str);
         void del();
-        const char* get() { return buff; }
-
+        void get(char (&b) [STRBUF_LEN]) { strcpy(b, buff); }
         void blank();
         void clear();
-        uint8_t size() { return idx; }
+        uint8_t size() { return buff[0] != 0?  idx: 0; }
         void dump() { for(int i = 0; i < STRBUF_LEN; i++) { Serial.print(" "); Serial.print((uint8_t)buff[i]); } }
 
     protected:
-        char* buff;
+        char buff[STRBUF_LEN];
         uint8_t idx;
 };

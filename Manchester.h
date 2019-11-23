@@ -22,7 +22,11 @@ class Manchester {
         void print(long arg);
         void print(volatile uint16_t& arg);
         void printn(const char* string);
+        void printn(const char* string, int val);
         void printn(const char* string, float val);
+     //   void printn(const char* string, int16_t val) { printn(string, val); };
+        void printn(const char* string, uint16_t val);
+        void printn(const char* string, uint8_t val) { printn(string, (uint16_t) val); };
         void print(unsigned char arg);
         void print(char arg);
         void setDirect(bool flag) { direct = flag; }
