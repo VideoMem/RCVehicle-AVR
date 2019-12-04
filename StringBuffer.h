@@ -1,18 +1,22 @@
 #include <inttypes.h>
 #include <Arduino.h>
+#include "MapSerial.h"
 #define STRBUF_LEN 32
 
-class StringBuffer {
+class StringBuffer: public MapSerial {
     public:
-        StringBuffer();
+        StringBuffer(Manchester* m);
         void add(char str);
         void del();
-        void get(char (&b) [STRBUF_LEN]) { strcpy(b, buff); }
-        void blank();
+        const char* get() { return buff; }
+        void blank(char (&d) [STRBUF_LEN]) { memset(d, 0, STRBUF_LEN); }
+        void blank() { blank(buff); };
         void clear();
-        uint8_t size() { return buff[0] != 0?  idx: 0; }
-        void dump() { for(int i = 0; i < STRBUF_LEN; i++) { Serial.print(" "); Serial.print((uint8_t)buff[i]); } }
-
+        uint8_t size() { return idx; }
+        void dump(char (&d) [STRBUF_LEN]) { for(int i=0; d[i]; ++i) { mapSerial->print(" "); mapSerial->print(d[i]); } }
+        void dump(const char* d) { for(int i = 0; d[i]; i++) { mapSerial->print(" "); mapSerial->print((uint8_t)d[i]); } }
+        void setup() { blank(); }
+        void update() {}
     protected:
         char buff[STRBUF_LEN];
         uint8_t idx;

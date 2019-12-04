@@ -1,12 +1,7 @@
 #include "StringBuffer.h"
 
-StringBuffer::StringBuffer() {
+StringBuffer::StringBuffer(Manchester* m):MapSerial(m) {
     clear();
-}
-
-void StringBuffer::blank() {
-    //buff[0] = 0;
-    memset(buff, 0, STRBUF_LEN);
 }
 
 void StringBuffer::clear() {
@@ -19,7 +14,6 @@ void StringBuffer::add(char str) {
     ++idx;
     idx = idx >= STRBUF_LEN ? STRBUF_LEN - 1 : idx;
     buff[idx] = 0; //null term
-    //if(idx == 1) add(str); //hack
 }
 
 void StringBuffer::del() {

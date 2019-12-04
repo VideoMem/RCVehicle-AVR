@@ -23,20 +23,15 @@ void Pty::gstatus() {
     mapSerial->printn("B ", code.b);
 }
 
-void Pty::setup() {
-    code.blank();
-}
-
 void Pty::gcode(T_gcode &g) {
     memcpy(&g, &code, sizeof(T_gcode));
 }
 
-void Pty::submit(char rcode, char (&num) [STRBUF_LEN]) {
-    String number = num;
-    int value = atoi(number.c_str());
-    mapSerial->print("Submit: ");
-    mapSerial->print(rcode);
-    mapSerial->printn(number.c_str());
+void Pty::submit(char rcode, char (&number) [STRBUF_LEN]) {
+    int value = atoi(number);
+    //mapSerial->print("Submit: ");
+    //mapSerial->print(rcode);
+    //mapSerial->printn(number);
     lastCode = rcode;
     switch(rcode) {
         case 'g':
@@ -68,21 +63,17 @@ void Pty::submit(char rcode, char (&num) [STRBUF_LEN]) {
     }
 }
 
-void Pty::blank(char (&number) [STRBUF_LEN]) {
-    memset(number, 0, STRBUF_LEN);
-}
-
-bool Pty::decode(char (&p) [STRBUF_LEN]) {
+bool Pty::decode() {
     uint8_t index = 0;
     char rcode = 0;
     char chr;
     char number[STRBUF_LEN]; blank(number);
-    uint8_t nidx = 0;
     error = false;
-    int i;
-
-    for(i = 0; p[i]; ++i) {
-        chr = p[i];
+    int i, idx = 0;
+    //mapSerial->print("to decode:");
+    //mapSerial->printn(get());
+    for(i = 0; get()[i]; ++i) {
+        chr = get()[i];
         switch((unsigned char) chr) {
             case 32:
             break;
@@ -90,8 +81,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 103:
                 if(rcode != 0)
                    submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'g';
                 //mapSerial->print("G code found\n");
             break;
@@ -99,8 +89,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 109:
                 if(rcode != 0)
                      submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'm';
                 //mapSerial->print("M code found\n");
             break;
@@ -108,8 +97,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 115:
                 if(rcode != 0)
                      submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 's';
                 //mapSerial->print("S code found\n");
             break;
@@ -117,8 +105,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 120:
                 if(rcode != 0)
                      submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'x';
                 //mapSerial->print("X code found\n");
             break;
@@ -126,8 +113,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 121:
                 if(rcode != 0)
                      submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'y';
                 //mapSerial->print("Y code found\n");
             break;
@@ -135,8 +121,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 117:
                 if(rcode != 0)
                      submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'u';
                 //mapSerial->print("U code found\n");
             break;
@@ -144,8 +129,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 118:
                 if(rcode != 0)
                     submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'v';
                 //mapSerial->print("V code found\n");
             break;
@@ -153,8 +137,7 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 98:
                 if(rcode != 0)
                     submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 'b';
                 //mapSerial->print("B code found\n");
             break;
@@ -170,21 +153,15 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
             case 55: // 7
             case 56: // 8
             case 57: // 9
-                //mapSerial->print ("Number build : ");
-                number[nidx] = chr;
-                //mapSerial->printn(chr);
-                nidx++;
-                //number[nidx] = 0;
+                number[idx] = chr;
+                ++idx;
             break;
             default:
                 error=true;
                 mapSerial->print("Unknown char ");
                 mapSerial->print(chr);
                 mapSerial->printn(" at col ", index);
-                if(rcode != 0)
-                    submit(rcode, number);
-                nidx = 0;
-                blank(number);
+                blank(number); idx = 0;
                 rcode = 0;
         }
         index++;
@@ -198,38 +175,35 @@ bool Pty::decode(char (&p) [STRBUF_LEN]) {
 void Pty::update() {
     int size2read;
     char read;
-    char input[STRBUF_LEN];
-    memset(input, 0, STRBUF_LEN);
 
     do {
         size2read = mapSerial->getDirect() ? mapSerial->available() : mapSerial->available() / 2;
         read = mapSerial->read();
 
         switch((uint8_t) read) {
-            case 13:
+            case 13: //enter
                 exec();
-                stdin->clear();
+                clear();
             break;
-            case 127:
+            case 127: //backspace
                 mapSerial->print("\r");
-                for(uint8_t i = 0; i < stdin->size(); ++i)
+                for(uint8_t i = 0; i < size(); ++i)
                     mapSerial->print(" ");
                 mapSerial->print("\r");
-                stdin->del();
-                stdin->get(input);
-                mapSerial->print(input);
+                del();
+                mapSerial->print(get());
             break;
             case 255:
             break;
-            default:
+            default: //is printable?
                 if(read >= 32 && read <= 126) {
-                    stdin->add(read);
-                    mapSerial->print(read);
-                    if(read < 45 || read > 57)
-                        if(stdin->size() > 1) {
-                            //exec();
-                            //stdin->clear();
+                    if (echo) mapSerial->print(read);
+                    if(read < 45 || read > 57) //is not number?
+                        if(size() > 1) {
+                            exec();
+                            clear();
                         }
+                    add(read);
                 }
             break;
         }
@@ -238,19 +212,21 @@ void Pty::update() {
 }
 
 void Pty::exec() {
-    char input[STRBUF_LEN];
-    memset(input, 0, STRBUF_LEN);
-    stdin->dump();
-    mapSerial->print("\r\n");
-    stdin->get(input);
-    if(decode(input)) {
-        gstatus();
-        //vfd->target(0, code.s);
+    //mapSerial->print("\r\n");
+    //dump(get());
+    //mapSerial->print("\r\n");
+    if(size() > 0) {
+        if(decode()) {
+            //gstatus();
+        } else {
+            mapSerial->print(get());
+            mapSerial->print("(");
+            mapSerial->print(size());
+            mapSerial->print(")");
+            mapSerial->print(": command not found!\n");
+        }
     } else {
-        mapSerial->print(input);
-        mapSerial->print("(");
-        mapSerial->print(stdin->size());
-        mapSerial->print(")");
-        mapSerial->print(": command not found!\n");
+        mapSerial->print("\r\n");
+        gstatus();
     }
 }

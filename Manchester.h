@@ -15,6 +15,7 @@ class Manchester {
         Manchester() { direct = false; }
         unsigned char* encode(unsigned char byte);
         unsigned char decode(const char* encoded);
+        void print(String &str) { print(str.c_str()); }
         void print(const char* string);
         void print(float arg);
         void print(int arg);

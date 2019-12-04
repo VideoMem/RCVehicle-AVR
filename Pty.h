@@ -17,23 +17,26 @@ class T_gcode {
     int  b;
 };
 
-class Pty : public MapSerial {
+class Pty : public StringBuffer {
     public:
-        Pty(Manchester* m):MapSerial(m) { stdin = new StringBuffer(); setup();  }
+        Pty(Manchester* m):StringBuffer(m) { setup();  }
         void update();
-        void setup();
+        void setup() { code.blank(); echo = false; };
         void gstatus();
         void gcode(T_gcode &g);
-        void clear() { code.blank(); }
         char getLast() { return lastCode; }
+        void flush() { lastCode = 0; }
+        void setEcho(bool b) { echo = b; }
     protected:
         bool error;
         T_gcode code;
-        StringBuffer* stdin;
+        //StringBuffer* stdin;
+        //char stdin[STRBUF_LEN];
+        //int stdid;
         char lastCode;
-        bool decode(char (&p) [STRBUF_LEN]);
+        bool decode();
+        //void dump(char (&d) [STRBUF_LEN]) { for(int i=0; d[i]; ++i) { mapSerial->print(" "); mapSerial->print(d[i]); } }
         void submit(char rcode, char (&number) [STRBUF_LEN]);
-        void blank(char (&number) [STRBUF_LEN]);
         void exec();
-        void dump(char (&q) [STRBUF_LEN]) { for(int i = 0; i < STRBUF_LEN; i++) { Serial.print(" "); Serial.print((uint8_t)q[i]); } }
+        bool echo;
 };

@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/BangServo.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BangServo.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uTimers.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/uTimers.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Battery.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Battery.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Battery.h" beforeDir="false" afterPath="$PROJECT_DIR$/Battery.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manchester.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Manchester.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Manchester.h" beforeDir="false" afterPath="$PROJECT_DIR$/Manchester.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pty.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Pty.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StringBuffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StringBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VFD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/VFD.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VFD.h" beforeDir="false" afterPath="$PROJECT_DIR$/VFD.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" afterDir="false" />
@@ -46,7 +46,6 @@
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/simavr.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/simavr.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/console/console.py" beforeDir="false" afterPath="$PROJECT_DIR$/console/console.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -71,12 +70,6 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="100" />
-    <option name="y" value="47" />
-    <option name="width" value="1400" />
-    <option name="height" value="833" />
-  </component>
   <component name="ProjectId" id="1SfY7P9Zw5fB0hCdBC3xqqcCC3N" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -89,6 +82,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/console/Legacy" />
       <recent name="$PROJECT_DIR$/console" />
     </key>

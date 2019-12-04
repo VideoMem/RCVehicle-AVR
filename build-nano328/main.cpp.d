@@ -10,5 +10,6 @@ build-nano328/main.cpp.o: main.cpp \
  /usr/share/arduino/hardware/arduino//cores/arduino/new.h \
  /usr/share/arduino/hardware/arduino//variants/eightanaloginputs/pins_arduino.h \
  /usr/share/arduino/hardware/arduino//variants/eightanaloginputs/../standard/pins_arduino.h \
- Timers.h Toggle.h Battery.h Module.h MapSerial.h Manchester.h Pty.h \
- StringBuffer.h
+ Timers.h Toggle.h Battery.h Module.h MapSerial.h Manchester.h \
+ BangServo.h uTimers.h Pty.h StringBuffer.h \
+ /usr/share/arduino/libraries/Servo/Servo.h

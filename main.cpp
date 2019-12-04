@@ -4,8 +4,10 @@
 #include "Battery.h"
 #include "Manchester.h"
 #include "MapSerial.h"
+#include "BangServo.h"
 //#include "VFD.h"
 #include "Pty.h"
+#include <Servo.h>
 
 //#ifdef __cplusplus
 //extern "C" {
@@ -16,7 +18,7 @@
 
 #define BOOT_DELAY 100
 #define NO_ERROR 500
-#define ON_ERROR 50
+#define ON_ERROR 250
 #define MINUTE 60
 #define BAUDRATE 9600
 
@@ -32,18 +34,47 @@ Battery battery(mapSerial);
 //volatile int counter = 0;
 //VFD* Drive = new VFD(mapSerial);
 Pty* pty = new Pty(mapSerial); //, Drive);
-
+T_gcode code;
 Toggle blinker;
+BangServo servoMotorA;
+BangServo servoMotorB;
 
 //ISR (TIMER1_COMPA_vect) {
 //    Motor::pointer->advance(0);
 //}
 
+#define UPOWER  9
+#define VPOWER  10
+#define UDIRF   2
+#define UDIRR   4
+#define VDIRF   7
+#define VDIRR   8
+#define FKICK   12
+#define RKICK   11
+
+void stopAll() {
+    analogWrite(UPOWER, 0);
+    analogWrite(VPOWER, 0);
+    digitalWrite(UDIRF, 0);
+    digitalWrite(UDIRR, 0);
+    digitalWrite(VDIRF, 0);
+    digitalWrite(VDIRR, 0);
+}
+
 
 void setup() {
-    pinMode(22, INPUT);
-    //mapSerial->printn("X ", code.x);
-    //mapSerial->printn("Y ", code.y);
+    pinMode(VBATPIN, INPUT);  //vbat
+    pinMode(UPOWER,  OUTPUT); //upower
+    pinMode(VPOWER,  OUTPUT); //vpower
+    pinMode(UDIRF,   OUTPUT); // u > 0
+    pinMode(UDIRR,   OUTPUT); // u < 0
+    pinMode(VDIRF,   OUTPUT); // v > 0
+    pinMode(VDIRR,   OUTPUT); // v < 0
+    servoMotorA.setup(FKICK);
+    servoMotorB.setup(RKICK);
+    //pinMode(KICK,    OUTPUT);
+    //pinMode(RKICK,   OUTPUT);
+    stopAll();
     Serial.begin(BAUDRATE);
     //while(true) {
     //    if(Serial.available())
@@ -60,7 +91,20 @@ void setup() {
     Serial.flush();
   //  Drive->setup();
     pty->gstatus();
+    pty->setEcho(false);
     mapSerial->print("Done\n");
+    unsigned long step = 0;
+
+    /*while (true) {
+
+        step = millis();
+        step %= 800;
+        step += 1000;
+        servoMotorA.write(step);
+        servoMotorA.update();
+        //delay(1000);
+    }*/
+
 }
 
 void ledDrive() {
@@ -95,10 +139,48 @@ void loop() {
     errorDrive();
     //motorDrive();
     pty->update();
-    //pty->gcode(code);
-    //if(pty->getLast() == 98) {
-    //    battery.check();
-    //}
+    pty->gcode(code);
+    servoMotorA.update();
+    servoMotorB.update();
+    if(pty->getLast() == 98) { //B
+        mapSerial->print("B");
+        battery.check();
+        battery.logValue();
+        pty->flush();
+    }
+
+    if(code.m == 8) {
+        servoMotorA.write(1900);
+        servoMotorB.write(1100);
+    } else {
+        servoMotorA.write(1100);
+        servoMotorB.write(1900);
+    }
+
+
+    if(code.u == 0 && code.v == 0) {
+        error=0;
+        stopAll();
+    } else {
+        error=1;
+    }
+
+    if(code.u > 0) {
+        digitalWrite(UDIRF,1); digitalWrite(UDIRR, 0);
+        analogWrite(UPOWER, code.u);
+    } else {
+        digitalWrite(UDIRF,0); digitalWrite(UDIRR, 1);
+        analogWrite(UPOWER, -code.u);
+    }
+
+    if(code.v > 0) {
+        digitalWrite(VDIRF,1); digitalWrite(VDIRR, 0);
+        analogWrite(VPOWER, code.v);
+    } else {
+        digitalWrite(VDIRF,0); digitalWrite(VDIRR, 1);
+         analogWrite(VPOWER, -code.v);
+    }
+
 }
 
 int main(void) {

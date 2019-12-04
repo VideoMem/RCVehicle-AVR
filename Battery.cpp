@@ -20,7 +20,7 @@ bool Battery::alarm() {
 void Battery::check() {
     int aux = analogRead(VBATPIN);
     vBat = 7.4 * (float) aux / 1023.0;
-    logValue();
+    //logValue();
 }
 
 void Battery::logAlarm() {
@@ -37,8 +37,8 @@ void Battery::logValue() {
 void Battery::update() {
     if(batTimer.event()) {
         check();
-        if(alarm())
-            logAlarm();
+        //if(alarm())
+         //   logAlarm();
         batTimer.reset();
     }
     batTimer.update();
