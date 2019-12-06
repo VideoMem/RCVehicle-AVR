@@ -2,50 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/BangServo.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BangServo.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uTimers.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/uTimers.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Battery.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Battery.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Manchester.h" beforeDir="false" afterPath="$PROJECT_DIR$/Manchester.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pty.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pty.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StringBuffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StringBuffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/StringBuffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Battery.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/DrumTimer.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Generator.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Line.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Line.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Manchester.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Manchester.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BangServo.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/BangServo.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BangServo.h" beforeDir="false" afterPath="$PROJECT_DIR$/BangServo.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Timers.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Timers.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/Toggle.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Toggle.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/CDC.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/CDC.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/HID.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/HID.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/HardwareSerial.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/HardwareSerial.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/IPAddress.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/IPAddress.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/Print.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/Print.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/Stream.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/Stream.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/Tone.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/Tone.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/USBCore.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/USBCore.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/WInterrupts.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/WInterrupts.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/WMath.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/WMath.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/WString.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/WString.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/avr-libc/malloc.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/avr-libc/malloc.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/avr-libc/realloc.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/avr-libc/realloc.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/new.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/new.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/wiring.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/wiring.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/wiring_analog.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/wiring_analog.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/wiring_digital.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/wiring_digital.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/wiring_pulse.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/wiring_pulse.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/core/wiring_shift.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/core/wiring_shift.c.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/libcore.a" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/libcore.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.d" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.d" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-nano328/simavr.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/simavr.c.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

@@ -1,5 +1,4 @@
 #include "BangServo.h"
-#include <Arduino.h>
 
 void BangServo::setup(int pin) {
     value = 1500;
@@ -8,6 +7,7 @@ void BangServo::setup(int pin) {
     cnt = 0;
     pulse = new uTimer();
     pulse->setUS(value);
+    setBlocking(false);
 }
 
 void BangServo::update() {
@@ -18,6 +18,11 @@ void BangServo::update() {
             digitalWrite(out, HIGH);
             pulse->setUS(value);
             ++cnt;
+            if(blocking) {
+                while(!pulse->event())
+                    pulse->update();
+                update();
+            }
         } else {
             digitalWrite(out, LOW);
             pulse->setUS(20000 - value);

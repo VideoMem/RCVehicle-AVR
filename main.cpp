@@ -72,6 +72,8 @@ void setup() {
     pinMode(VDIRR,   OUTPUT); // v < 0
     servoMotorA.setup(FKICK);
     servoMotorB.setup(RKICK);
+    //servoMotorA.setBlocking(true);
+    //servoMotorB.setBlocking(true);
     //pinMode(KICK,    OUTPUT);
     //pinMode(RKICK,   OUTPUT);
     stopAll();
@@ -150,11 +152,11 @@ void loop() {
     }
 
     if(code.m == 8) {
-        servoMotorA.write(1900);
-        servoMotorB.write(1100);
+        servoMotorA.write(90);
+        servoMotorB.write(45);
     } else {
-        servoMotorA.write(1100);
-        servoMotorB.write(1900);
+        servoMotorA.write(45);
+        servoMotorB.write(90);
     }
 
 
