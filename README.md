@@ -10,7 +10,7 @@ Connect nano trough usb serial port and execute
 
 $ make upload
 
-### Console
+### Console (Manchester line coding)
 
 $ python console/console.py
 
