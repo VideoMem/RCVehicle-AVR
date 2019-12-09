@@ -25,6 +25,7 @@ const unsigned char ledPin = 13;                             // LED connected to
 static unsigned char busy = 0;
 
 Timer blinkTimer;
+Timer mpuTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
 //Motor* Motor::pointer;//
@@ -36,6 +37,7 @@ T_gcode code;
 Toggle blinker;
 BangServo servoMotorA;
 BangServo servoMotorB;
+MPU6050* MPU = new MPU6050(mapSerial);
 
 //ISR (TIMER1_COMPA_vect) {
 //    Motor::pointer->advance(0);
@@ -84,15 +86,18 @@ void setup() {
     mapSerial->print("Initializing ... \n");
     pinMode(ledPin, OUTPUT);
 	blinkTimer.setMS(NO_ERROR);
+    mpuTimer.setMS(100);
     battery.check();
 
-
+    MPU->setup();
+    //MPU->calculate_IMU_error();
     Serial.flush();
   //  Drive->setup();
     pty->gstatus();
     pty->setEcho(false);
     mapSerial->print("Done\n");
     unsigned long step = 0;
+
 
     /*while (true) {
 
@@ -116,8 +121,14 @@ void ledDrive() {
         blinker.change();
         blinkTimer.reset();
     }
-    
+
+    if(mpuTimer.event()) {
+        MPU->update();
+        mpuTimer.reset();
+    }
+
     blinkTimer.update();
+    mpuTimer.update();
 }
 
 void errorDrive() {
@@ -155,7 +166,6 @@ void loop() {
         servoMotorA.write(45);
         servoMotorB.write(90);
     }
-
 
     if(code.u == 0 && code.v == 0) {
         busy=0;
