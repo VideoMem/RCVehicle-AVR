@@ -5,9 +5,8 @@
 #include "Manchester.h"
 #include "MapSerial.h"
 #include "BangServo.h"
-//#include "VFD.h"
 #include "Pty.h"
-#include <Servo.h>
+#include "MPU6050.h"
 
 //#ifdef __cplusplus
 //extern "C" {
@@ -22,9 +21,8 @@
 #define MINUTE 60
 #define BAUDRATE 9600
 
-
 const unsigned char ledPin = 13;                             // LED connected to digital pin 13
-static unsigned char error = 0;
+static unsigned char busy = 0;
 
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
@@ -60,7 +58,6 @@ void stopAll() {
     digitalWrite(VDIRF, 0);
     digitalWrite(VDIRR, 0);
 }
-
 
 void setup() {
     pinMode(VBATPIN, INPUT);  //vbat
@@ -124,7 +121,7 @@ void ledDrive() {
 }
 
 void errorDrive() {
-    if(error == 1) {
+    if(busy == 1) {
         blinkTimer.setMS(ON_ERROR);         
     } else {
         blinkTimer.setMS(NO_ERROR);         
@@ -161,10 +158,10 @@ void loop() {
 
 
     if(code.u == 0 && code.v == 0) {
-        error=0;
+        busy=0;
         stopAll();
     } else {
-        error=1;
+        busy=1;
     }
 
     if(code.u > 0) {
