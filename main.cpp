@@ -8,13 +8,7 @@
 #include "Pty.h"
 #include "MPU6050.h"
 
-//#ifdef __cplusplus
-//extern "C" {
-//#include <avr/avr_mcu_section.h>
-//AVR_MCU(F_CPU, "atmega328p");
-//}
-//#endif
-
+#define GYRO_ENABLED true
 #define BOOT_DELAY 100
 #define NO_ERROR 500
 #define ON_ERROR 250
@@ -28,10 +22,6 @@ Timer blinkTimer;
 Timer mpuTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
-//Motor* Motor::pointer;//
-//volatile Motor mstate;
-//volatile int counter = 0;
-//VFD* Drive = new VFD(mapSerial);
 Pty* pty = new Pty(mapSerial); //, Drive);
 T_gcode code;
 Toggle blinker;
@@ -71,16 +61,9 @@ void setup() {
     pinMode(VDIRR,   OUTPUT); // v < 0
     servoMotorA.setup(FKICK);
     servoMotorB.setup(RKICK);
-    //servoMotorA.setBlocking(true);
-    //servoMotorB.setBlocking(true);
-    //pinMode(KICK,    OUTPUT);
-    //pinMode(RKICK,   OUTPUT);
+
     stopAll();
     Serial.begin(BAUDRATE);
-    //while(true) {
-    //    if(Serial.available())
-    //        Serial.write(Serial.read());
-    //}
 
     mapSerial->setDirect(true);
     mapSerial->print("Initializing ... \n");
@@ -89,26 +72,12 @@ void setup() {
     mpuTimer.setMS(100);
     battery.check();
 
-    MPU->setup();
-    //MPU->calculate_IMU_error();
+    if(GYRO_ENABLED) MPU->setup();
     Serial.flush();
-  //  Drive->setup();
     pty->gstatus();
     pty->setEcho(false);
     mapSerial->print("Done\n");
     unsigned long step = 0;
-
-
-    /*while (true) {
-
-        step = millis();
-        step %= 800;
-        step += 1000;
-        servoMotorA.write(step);
-        servoMotorA.update();
-        //delay(1000);
-    }*/
-
 }
 
 void ledDrive() {
@@ -122,7 +91,7 @@ void ledDrive() {
         blinkTimer.reset();
     }
 
-    if(mpuTimer.event()) {
+    if(mpuTimer.event() && GYRO_ENABLED) {
         MPU->update();
         mpuTimer.reset();
     }
@@ -139,15 +108,10 @@ void errorDrive() {
     }
 }
 
-//void motorDrive() {
-//    Drive->update();
-//}
-
 void loop() {
     ledDrive();
     battery.update();
     errorDrive();
-    //motorDrive();
     pty->update();
     pty->gcode(code);
     servoMotorA.update();
