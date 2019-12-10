@@ -12,12 +12,15 @@ void MPU6050::update() {
 void MPU6050::setup(int a) {
     addr = a;
     c=0;
+    mode=0;
     gyroAngleX = 0;
     gyroAngleY = 0;
     gyroAngleZ = 0;
     accAngleX = 0;
     accAngleY = 0;
-
+    pitch=0;
+    roll=0;
+    yaw=0;
     init();
 }
 
@@ -108,34 +111,43 @@ void MPU6050::pollGyro() {
     GyroY = (Wire.read() << 8 | Wire.read()) / 131.0;
     GyroZ = (Wire.read() << 8 | Wire.read()) / 131.0;
     // Correct the outputs with the calculated error values
-    //GyroX -= GyroErrorX; // GyroErrorX
-    //GyroY -= GyroErrorY; // GyroErrorY
-    //GyroZ -= GyroErrorZ; // GyroErrorZ
+    GyroX -= GyroErrorX; // GyroErrorX
+    GyroY -= GyroErrorY; // GyroErrorY
+    GyroZ -= GyroErrorZ; // GyroErrorZ
     // Currently the raw values are in degrees per seconds, deg/s, so we need to multiply by sendonds (s) to get the angle in degrees
     gyroAngleX = gyroAngleX + GyroX * elapsedTime; // deg/s * s = deg
     gyroAngleY = gyroAngleY + GyroY * elapsedTime;
-    yaw =  yaw + GyroZ * elapsedTime;
+
+    yaw = mode == 0? GyroZ * elapsedTime: yaw + GyroZ * elapsedTime;
+
     // Complementary filter - combine acceleromter and gyro angle values
-    float rollDrift = gyroAngleX - accAngleX;
-    float pitchDrift = gyroAngleY - accAngleY;
-    gyroAngleX-=(0.1*rollDrift);
-    gyroAngleY-=(0.1*pitchDrift);
-    //roll = gyroAngleX;
-    //roll = 0.96 * gyroAngleX + 0.04 * accAngleX;
-    //pitch = 0.96 * gyroAngleY + 0.04 * accAngleY;
+    float rollDrift = abs(gyroAngleX - accAngleX);
+    float pitchDrift = abs(gyroAngleY - accAngleY);
+    float gain = 0.05;
+    gyroAngleX = gyroAngleX > 0? gyroAngleX -(gain * rollDrift): gyroAngleX + (gain * rollDrift);
+    gyroAngleY = gyroAngleY > 0? gyroAngleY -(gain * pitchDrift): gyroAngleY + (gain * pitchDrift);
 }
+
+void MPU6050::logYaw() {
+    mapSerial->printn("P", yaw);
+}
+
 void MPU6050::logPRY() {
     // Print the values on the serial monitor
     mapSerial->print("N");
     mapSerial->print(gyroAngleX);
     mapSerial->print("O");
     mapSerial->print(gyroAngleY);
-//    mapSerial->print("Q");
-//    mapSerial->print(accAngleX);
-//    mapSerial->print("R");
-//    mapSerial->print(accAngleY);
-    mapSerial->print("\r\n");
+    logYaw();
+}
 
+void MPU6050::logErrors() {
+    // Print the error values on the Serial Monitor
+    mapSerial->printn("|AccErrorX:", AccErrorX);
+    mapSerial->printn("|AccErrorY:", AccErrorY);
+    mapSerial->printn("|GyroErrorX:", GyroErrorX);
+    mapSerial->printn("|GyroErrorY:", GyroErrorY);
+    mapSerial->printn("|GyroErrorZ:", GyroErrorZ);
 }
 
 void MPU6050::calculate_IMU_error() {
@@ -143,7 +155,7 @@ void MPU6050::calculate_IMU_error() {
     // Note that we should place the IMU flat in order to get the proper values, so that we then can the correct values
     // Read accelerometer values 200 times
 
-    while (c < 2000) {
+    while (c < MPU_ERROR_SAMPLES) {
         Wire.beginTransmission(addr);
         Wire.write(0x3B);
         Wire.endTransmission(false);
@@ -157,11 +169,11 @@ void MPU6050::calculate_IMU_error() {
         c++;
     }
     //Divide the sum by 200 to get the error value
-    AccErrorX = AccErrorX / 2000;
-    AccErrorY = AccErrorY / 2000;
+    AccErrorX = AccErrorX / MPU_ERROR_SAMPLES;
+    AccErrorY = AccErrorY / MPU_ERROR_SAMPLES;
     c = 0;
     // Read gyro values 200 times
-    while (c < 2000) {
+    while (c < MPU_ERROR_SAMPLES) {
         Wire.beginTransmission(addr);
         Wire.write(0x43);
         Wire.endTransmission(false);
@@ -176,14 +188,8 @@ void MPU6050::calculate_IMU_error() {
         c++;
     }
     //Divide the sum by 200 to get the error value
-    GyroErrorX = GyroErrorX / 2000;
-    GyroErrorY = GyroErrorY / 2000;
-    GyroErrorZ = GyroErrorZ / 2000;
-
-    // Print the error values on the Serial Monitor
-    mapSerial->printn("AccErrorX: ", AccErrorX);
-    mapSerial->printn("AccErrorY: ", AccErrorY);
-    mapSerial->printn("GyroErrorX: ", GyroErrorX);
-    mapSerial->printn("GyroErrorY: ", GyroErrorY);
-    mapSerial->printn("GyroErrorZ: ", GyroErrorZ);
+    GyroErrorX = GyroErrorX / MPU_ERROR_SAMPLES;
+    GyroErrorY = GyroErrorY / MPU_ERROR_SAMPLES;
+    GyroErrorZ = GyroErrorZ / MPU_ERROR_SAMPLES;
+    logErrors();
 }

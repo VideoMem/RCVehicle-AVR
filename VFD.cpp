@@ -70,22 +70,22 @@ void VFD::update() {
     if(logSample->event()) {
         mapSerial->print("CNT: ");
         mapSerial->print(TCNT1);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         mapSerial->print("OCR: ");
         mapSerial->print(OCR1A);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         mapSerial->print("tsp: ");
         mapSerial->print(tspd[0]);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         mapSerial->print("rsp: ");
         mapSerial->print(rspd[0]);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         mapSerial->print("spd: ");
         mapSerial->print(spd[0]);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         mapSerial->print("pos: ");
         mapSerial->print(Motor::pointer->Position[0]);
-        mapSerial->print("\n");
+        mapSerial->print("\r\n");
         logSample->reset();
     }
 

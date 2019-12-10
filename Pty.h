@@ -28,6 +28,8 @@ class Pty : public StringBuffer {
         void flush() { lastCode = 0; }
         void setEcho(bool b) { echo = b; }
         void resetMcode() { code.m = 0; }
+        void resetGcode() { code.g = 0; }
+
     protected:
         bool error;
         T_gcode code;

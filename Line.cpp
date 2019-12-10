@@ -78,15 +78,15 @@ bool Line::halt() {
 }
 
 void Line::generatorMSG() {
-    mapSerial->print("No power present at the mains, starting generator ...\n");
+    mapSerial->print("No power present at the mains, starting generator ...\r\n");
 }
 
 void Line::mainsMSG() {
-    mapSerial->print("Power present, reconnecting to the mains ...\n");
+    mapSerial->print("Power present, reconnecting to the mains ...\r\n");
 }
 
 void Line::abnormalMSG() {
-    mapSerial->print("Abnormal power input!\n");
+    mapSerial->print("Abnormal power input!\r\n");
 }
 
 Line::Line(const Manchester* s) {
@@ -121,7 +121,7 @@ void Line::outVoltages() {
             break;
         }
         mapSerial->print(voltages[i]);
-        mapSerial->print("V\n");
+        mapSerial->print("V\r\n");
     } 
 }
 
@@ -208,7 +208,7 @@ void Line::phaseUpdate() {
             j = i + 1;
             mapSerial->print("Phase ");
             mapSerial->print(j);
-            mapSerial->print(": disconnected\n");
+            mapSerial->print(": disconnected\r\n");
         }
     }
     

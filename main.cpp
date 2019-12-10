@@ -8,6 +8,9 @@
 #include "Pty.h"            //Serial terminal & G code reader
 #include "MPU6050.h"        //Accelerometer & Gyro device communication
 
+#define GYRO_ENABLED  true  //Set to true to setup and allow Gyro+Accel enabled
+#define SERVO_ENABLED false //Set to true to enable kick servos
+
 #define UPOWER  9   //Motor U power PWM pin
 #define VPOWER  10  //Motor V power PWM pin
 #define UDIRF   2   //Motor U dir Forward pin
@@ -17,8 +20,7 @@
 #define FKICK   12  //Kick Servo PWM pin
 #define RKICK   11  //Kick Servo PWM pin
 
-#define GYRO_ENABLED true   //Set to true to setup and allow Gyro+Accel enabled
-#define SERVO_ENABLED true  //Set to true to enable kick servos
+
 #define BOOT_DELAY 100
 #define NO_ERROR 500        //led blinking intervals
 #define ON_ERROR 250        //
@@ -30,6 +32,8 @@ static unsigned char busy = 0;
 
 //start of globals
 
+float lastTangle;
+Timer mpuTimer;
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
@@ -69,18 +73,62 @@ void setup() {
     Serial.begin(BAUDRATE);
 
     mapSerial->setDirect(true);
-    mapSerial->print("Initializing ... \n");
+    mapSerial->print("Initializing ... \r\n");
     pinMode(ledPin, OUTPUT);
 	blinkTimer.setMS(NO_ERROR);
     battery.check();
 
-    if(GYRO_ENABLED) MPU->setup();
+    if(GYRO_ENABLED) {
+        MPU->setup();
+        mpuTimer.setMS(50);
+        lastTangle = 0;
+    }
     Serial.flush();
     pty->gstatus();
     pty->setEcho(false);
-    mapSerial->print("Done\n");
+    mapSerial->print("Done\r\n");
     unsigned long step = 0;
 }
+
+
+float tractionAngle() {
+    if(code.u == 0 && code.v == 0) return 0;
+    float u = code.u;
+    float v = code.v;
+    float angle = u >= 0 ? atan(v / u): atan(v / -u);
+    return (angle * 180 / PI) - 45;
+}
+
+void tractionControl() {
+    float tAngle = lastTangle - tractionAngle();
+    float tYaw = MPU->getYaw();
+    float gain = 5.0;
+    float drift = (tAngle - tYaw) * gain;
+
+    //if(millis() % 100 == 0) {mapSerial->print("Drift"); Serial.print(round(drift));}
+    if (drift > 0) {
+        code.u-= abs(round(drift));
+        code.v+= abs(round(drift));
+    } else {
+        code.u+= abs(round(drift));
+        code.v-= abs(round(drift));
+    }
+
+    if(code.u > 255) code.u = 255;
+    if(code.v > 255) code.v = 255;
+    if(code.u < -255) code.u = -255;
+    if(code.v < -255) code.v = -255;
+}
+
+void tractionDrive() {
+    if(mpuTimer.event()) {
+        MPU->pollGyro();
+        lastTangle = tractionAngle();
+        mpuTimer.reset();
+    }
+    mpuTimer.update();
+}
+
 
 void ledDrive() {
     if(blinker.value() == true)
@@ -89,6 +137,8 @@ void ledDrive() {
         digitalWrite(ledPin, LOW);    // set the LED off
 
     if(blinkTimer.event()) {
+        //Serial.print("Angle:"); Serial.println(tractionAngle());
+        //Serial.print("angle -YAW:"); Serial.println(tractionAngle() - MPU->getYaw());
         blinker.change();
         blinkTimer.reset();
     }
@@ -104,46 +154,45 @@ void errorDrive() {
     }
 }
 
-void loop() {
-    ledDrive();
-    battery.update();
-    errorDrive();
-    pty->update();
-    pty->gcode(code);
+void gyroDrive() {
+    if (code.m == 10) {
+        MPU->update();
+        pty->resetMcode();
+    }
+}
 
-    if(SERVO_ENABLED) {
-        servoMotorA.update();
-        servoMotorB.update();
+void servoDrive() {
+    servoMotorA.update();
+    servoMotorB.update();
+    if(code.m == 8) {
+        servoMotorA.write(90);
+        servoMotorB.write(45);
     }
 
+    if (code.m == 9) {
+        servoMotorA.write(45);
+        servoMotorB.write(90);
+    }
+}
+
+void batteryDrive() {
     if(pty->getLast() == 98) { //B
         mapSerial->print("B");
         battery.check();
         battery.logValue();
         pty->flush();
     }
+}
 
-    if(code.m == 8 && SERVO_ENABLED) {
-        servoMotorA.write(90);
-        servoMotorB.write(45);
-    }
-
-    if (code.m == 9 && SERVO_ENABLED) {
-        servoMotorA.write(45);
-        servoMotorB.write(90);
-    }
-
-    if (code.m == 10 && GYRO_ENABLED) {
-        MPU->update();
-        pty->resetMcode();
-    }
-
+void caterpillarDrive() {
     if(code.u == 0 && code.v == 0) {
         busy=0;
         stopAll();
     } else {
         busy=1;
     }
+
+    if(GYRO_ENABLED) tractionControl();
 
     if(code.u > 0) {
         digitalWrite(UDIRF,1); digitalWrite(UDIRR, 0);
@@ -160,7 +209,43 @@ void loop() {
         digitalWrite(VDIRF,0); digitalWrite(VDIRR, 1);
         analogWrite(VPOWER, -code.v);
     }
+}
 
+void bitPrint(bool bit) {
+    bit == true? mapSerial->print("1\r\n"): mapSerial->print("0\r\n");
+}
+
+void sendFWCapabilites() {
+    mapSerial->print("|SERVO:"); bitPrint(SERVO_ENABLED);
+    mapSerial->print("|GYRO:"); bitPrint(GYRO_ENABLED);
+    pty->resetMcode();
+}
+
+void sendFWErr() {
+    MPU->logErrors();
+    pty->resetMcode();
+}
+
+void recalibrateIMU() {
+    MPU->calculate_IMU_error();
+    pty->resetMcode();
+}
+
+void loop() {
+    ledDrive();
+    battery.update();
+    errorDrive();
+    pty->update();
+    pty->gcode(code);
+
+    batteryDrive();
+    if(SERVO_ENABLED) servoDrive();
+    if(GYRO_ENABLED)  gyroDrive();
+    if(code.m == 99)  sendFWCapabilites();
+    if(code.m == 100) sendFWErr();
+    if(code.m == 101) recalibrateIMU();
+    tractionDrive();
+    caterpillarDrive();
 }
 
 int main(void) {

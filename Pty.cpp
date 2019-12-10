@@ -223,7 +223,7 @@ void Pty::exec() {
             mapSerial->print("(");
             mapSerial->print(size());
             mapSerial->print(")");
-            mapSerial->print(": command not found!\n");
+            mapSerial->print(": command not found!\r\n");
         }
     } else {
         mapSerial->print("\r\n");

@@ -8,6 +8,8 @@
 #define MPU6050_H_VERSION "0"
 #include "Module.h"
 #include "MapSerial.h"
+#define MPU_ERROR_SAMPLES 200
+
 
 #define DEFMPUADDR 0x68
 class MPU6050: public MapSerial {
@@ -27,9 +29,13 @@ class MPU6050: public MapSerial {
         void pollGyro();
         void poll() { pollAccel(); pollGyro(); }
         void logPRY();
+        void logYaw();
+        void logErrors();
+        float getYaw() { return yaw; }
 
     private:
         int addr;
+        char mode;
         float AccX, AccY, AccZ;
         float GyroX, GyroY, GyroZ;
         float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;

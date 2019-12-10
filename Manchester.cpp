@@ -82,25 +82,25 @@ void Manchester::print(unsigned char arg) {
 
 void Manchester::printn(const char* arg) {
     print(arg);
-    print("\n");
+    print("\r\n");
 }
 
 void Manchester::printn(const char* arg, int val) {
     print(arg);
     print(val);
-    print("\n");
+    print("\r\n");
 }
 
 void Manchester::printn(const char* arg, float val) {
     print(arg);
     print(val);
-    print("\n");
+    print("\r\n");
 }
 
 void Manchester::printn(const char* arg, uint16_t val) {
     print(arg);
     print(val);
-    print("\n");
+    print("\r\n");
 }
 
 
