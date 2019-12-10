@@ -1,46 +1,46 @@
 #include <Arduino.h>
-#include "Timers.h"
-#include "Toggle.h"
-#include "Battery.h"
-#include "Manchester.h"
-#include "MapSerial.h"
-#include "BangServo.h"
-#include "Pty.h"
-#include "MPU6050.h"
+#include "Timers.h"         //non blocking timers
+#include "Toggle.h"         //modal switchable
+#include "Battery.h"        //read battery voltage
+#include "Manchester.h"     //serial line encoding for IR and cheap SAW RF
+#include "MapSerial.h"      //Serial extension to allow line coding
+#include "BangServo.h"      //Non blocking servo control
+#include "Pty.h"            //Serial terminal & G code reader
+#include "MPU6050.h"        //Accelerometer & Gyro device communication
 
-#define GYRO_ENABLED true
-#define SERVO_ENABLED true
+#define UPOWER  9   //Motor U power PWM pin
+#define VPOWER  10  //Motor V power PWM pin
+#define UDIRF   2   //Motor U dir Forward pin
+#define UDIRR   4   //Motor U Reverse dir pin
+#define VDIRF   7   //Motor V dir Forward pin
+#define VDIRR   8   //Motor V dir Reverse pin
+#define FKICK   12  //Kick Servo PWM pin
+#define RKICK   11  //Kick Servo PWM pin
+
+#define GYRO_ENABLED true   //Set to true to setup and allow Gyro+Accel enabled
+#define SERVO_ENABLED true  //Set to true to enable kick servos
 #define BOOT_DELAY 100
-#define NO_ERROR 500
-#define ON_ERROR 250
+#define NO_ERROR 500        //led blinking intervals
+#define ON_ERROR 250        //
 #define MINUTE 60
-#define BAUDRATE 9600
+#define BAUDRATE 9600       //default baudrate of the serial port
 
-const unsigned char ledPin = 13;                             // LED connected to digital pin 13
+const unsigned char ledPin = 13;    // LED connected to digital pin 13
 static unsigned char busy = 0;
+
+//start of globals
 
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
-Pty* pty = new Pty(mapSerial); //, Drive);
+Pty* pty = new Pty(mapSerial);
 T_gcode code;
 Toggle blinker;
 BangServo servoMotorA;
 BangServo servoMotorB;
 MPU6050* MPU = new MPU6050(mapSerial);
 
-//ISR (TIMER1_COMPA_vect) {
-//    Motor::pointer->advance(0);
-//}
-
-#define UPOWER  9
-#define VPOWER  10
-#define UDIRF   2
-#define UDIRR   4
-#define VDIRF   7
-#define VDIRR   8
-#define FKICK   12
-#define RKICK   11
+//main app procedures
 
 void stopAll() {
     analogWrite(UPOWER, 0);
