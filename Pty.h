@@ -27,6 +27,7 @@ class Pty : public StringBuffer {
         char getLast() { return lastCode; }
         void flush() { lastCode = 0; }
         void setEcho(bool b) { echo = b; }
+        void resetMcode() { code.m = 0; }
     protected:
         bool error;
         T_gcode code;

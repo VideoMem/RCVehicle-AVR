@@ -130,10 +130,10 @@ void MPU6050::logPRY() {
     mapSerial->print(gyroAngleX);
     mapSerial->print("O");
     mapSerial->print(gyroAngleY);
-    mapSerial->print("Q");
-    mapSerial->print(accAngleX);
-    mapSerial->print("R");
-    mapSerial->print(accAngleY);
+//    mapSerial->print("Q");
+//    mapSerial->print(accAngleX);
+//    mapSerial->print("R");
+//    mapSerial->print(accAngleY);
     mapSerial->print("\r\n");
 
 }

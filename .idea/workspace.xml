@@ -4,7 +4,7 @@
     <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MPU6050.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MPU6050.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MPU6050.h" beforeDir="false" afterPath="$PROJECT_DIR$/MPU6050.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pty.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pty.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.elf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/Three-Phase-Driver-AVR.hex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build-nano328/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/build-nano328/main.cpp.o" afterDir="false" />

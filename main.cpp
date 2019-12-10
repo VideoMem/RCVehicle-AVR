@@ -9,6 +9,7 @@
 #include "MPU6050.h"
 
 #define GYRO_ENABLED true
+#define SERVO_ENABLED true
 #define BOOT_DELAY 100
 #define NO_ERROR 500
 #define ON_ERROR 250
@@ -19,7 +20,6 @@ const unsigned char ledPin = 13;                             // LED connected to
 static unsigned char busy = 0;
 
 Timer blinkTimer;
-Timer mpuTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
 Pty* pty = new Pty(mapSerial); //, Drive);
@@ -59,8 +59,11 @@ void setup() {
     pinMode(UDIRR,   OUTPUT); // u < 0
     pinMode(VDIRF,   OUTPUT); // v > 0
     pinMode(VDIRR,   OUTPUT); // v < 0
-    servoMotorA.setup(FKICK);
-    servoMotorB.setup(RKICK);
+
+    if(SERVO_ENABLED) {
+        servoMotorA.setup(FKICK);
+        servoMotorB.setup(RKICK);
+    }
 
     stopAll();
     Serial.begin(BAUDRATE);
@@ -69,7 +72,6 @@ void setup() {
     mapSerial->print("Initializing ... \n");
     pinMode(ledPin, OUTPUT);
 	blinkTimer.setMS(NO_ERROR);
-    mpuTimer.setMS(100);
     battery.check();
 
     if(GYRO_ENABLED) MPU->setup();
@@ -91,13 +93,7 @@ void ledDrive() {
         blinkTimer.reset();
     }
 
-    if(mpuTimer.event() && GYRO_ENABLED) {
-        MPU->update();
-        mpuTimer.reset();
-    }
-
     blinkTimer.update();
-    mpuTimer.update();
 }
 
 void errorDrive() {
@@ -114,8 +110,12 @@ void loop() {
     errorDrive();
     pty->update();
     pty->gcode(code);
-    servoMotorA.update();
-    servoMotorB.update();
+
+    if(SERVO_ENABLED) {
+        servoMotorA.update();
+        servoMotorB.update();
+    }
+
     if(pty->getLast() == 98) { //B
         mapSerial->print("B");
         battery.check();
@@ -123,12 +123,19 @@ void loop() {
         pty->flush();
     }
 
-    if(code.m == 8) {
+    if(code.m == 8 && SERVO_ENABLED) {
         servoMotorA.write(90);
         servoMotorB.write(45);
-    } else {
+    }
+
+    if (code.m == 9 && SERVO_ENABLED) {
         servoMotorA.write(45);
         servoMotorB.write(90);
+    }
+
+    if (code.m == 10 && GYRO_ENABLED) {
+        MPU->update();
+        pty->resetMcode();
     }
 
     if(code.u == 0 && code.v == 0) {
@@ -151,7 +158,7 @@ void loop() {
         analogWrite(VPOWER, code.v);
     } else {
         digitalWrite(VDIRF,0); digitalWrite(VDIRR, 1);
-         analogWrite(VPOWER, -code.v);
+        analogWrite(VPOWER, -code.v);
     }
 
 }
