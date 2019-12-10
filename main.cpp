@@ -33,6 +33,7 @@ static unsigned char busy = 0;
 //start of globals
 
 float lastTangle;
+bool noControl;
 Timer mpuTimer;
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
@@ -77,7 +78,7 @@ void setup() {
     pinMode(ledPin, OUTPUT);
 	blinkTimer.setMS(NO_ERROR);
     battery.check();
-
+    noControl = false;
     if(GYRO_ENABLED) {
         MPU->setup();
         mpuTimer.setMS(50);
@@ -100,12 +101,12 @@ float tractionAngle() {
 }
 
 void tractionControl() {
+    if(code.u == 0 && code.v == 0 || noControl) return;
     float tAngle = lastTangle - tractionAngle();
     float tYaw = MPU->getYaw();
-    float gain = 5.0;
+    float gain = 2.5;
     float drift = (tAngle - tYaw) * gain;
 
-    //if(millis() % 100 == 0) {mapSerial->print("Drift"); Serial.print(round(drift));}
     if (drift > 0) {
         code.u-= abs(round(drift));
         code.v+= abs(round(drift));
@@ -122,7 +123,7 @@ void tractionControl() {
 
 void tractionDrive() {
     if(mpuTimer.event()) {
-        MPU->pollGyro();
+        MPU->poll();
         lastTangle = tractionAngle();
         mpuTimer.reset();
     }
@@ -156,7 +157,7 @@ void errorDrive() {
 
 void gyroDrive() {
     if (code.m == 10) {
-        MPU->update();
+        MPU->logPRY();
         pty->resetMcode();
     }
 }
@@ -244,6 +245,8 @@ void loop() {
     if(code.m == 99)  sendFWCapabilites();
     if(code.m == 100) sendFWErr();
     if(code.m == 101) recalibrateIMU();
+    if(code.m == 20) { noControl = true; pty->resetMcode(); }
+    if(code.m == 21) { noControl = false; pty->resetMcode(); }
     tractionDrive();
     caterpillarDrive();
 }
