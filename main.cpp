@@ -91,7 +91,6 @@ void setup() {
     unsigned long step = 0;
 }
 
-
 float tractionAngle() {
     if(code.u == 0 && code.v == 0) return 0;
     float u = code.u;
@@ -104,7 +103,7 @@ void tractionControl() {
     if(code.u == 0 && code.v == 0 || noControl) return;
     float tAngle = lastTangle - tractionAngle();
     float tYaw = MPU->getYaw();
-    float gain = 2.5;
+    float gain = 3;
     float drift = (tAngle - tYaw) * gain;
 
     if (drift > 0) {

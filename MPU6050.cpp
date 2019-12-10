@@ -118,12 +118,15 @@ void MPU6050::pollGyro() {
     gyroAngleX = gyroAngleX + GyroX * elapsedTime; // deg/s * s = deg
     gyroAngleY = gyroAngleY + GyroY * elapsedTime;
 
-    yaw = mode == 0? GyroZ * elapsedTime: yaw + GyroZ * elapsedTime;
-
     // Complementary filter - combine acceleromter and gyro angle values
+    float gain = 0.05;
+    float ygain = 0.05;
+    yaw = yaw + GyroZ * elapsedTime;
+
+    yaw = yaw > 0? yaw -(ygain * abs(GyroZ)): yaw + (ygain * abs(GyroZ));
+
     float rollDrift = abs(gyroAngleX - accAngleX);
     float pitchDrift = abs(gyroAngleY - accAngleY);
-    float gain = 0.05;
     gyroAngleX = gyroAngleX > 0? gyroAngleX -(gain * rollDrift): gyroAngleX + (gain * rollDrift);
     gyroAngleY = gyroAngleY > 0? gyroAngleY -(gain * pitchDrift): gyroAngleY + (gain * pitchDrift);
 }
