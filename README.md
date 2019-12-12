@@ -27,7 +27,8 @@ $ python console/console.py
 Manchester line code is intended for use with IR and RF SAW modules (disabled per default)
 It will slow down your baudrate in half but improves clock recovery and signal quality.
 
-###TODO
+### TODO
+
 Link to main Android Bluetooth controller app 
 
 
