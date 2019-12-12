@@ -1,4 +1,4 @@
-build-nano328/main.cpp.o: main.cpp \
+build-nano328/main.cpp.o: main.cpp main.h \
  /usr/share/arduino/hardware/arduino//cores/arduino/Arduino.h \
  /usr/share/arduino/hardware/arduino//cores/arduino/binary.h \
  /usr/share/arduino/hardware/arduino//cores/arduino/WCharacter.h \

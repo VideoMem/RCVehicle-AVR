@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ContactorControl.iml" filepath="$PROJECT_DIR$/ContactorControl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RCVehicle.iml" filepath="$PROJECT_DIR$/RCVehicle.iml" />
     </modules>
   </component>
 </project>
