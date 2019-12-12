@@ -27,6 +27,20 @@ $ python console/console.py
 Manchester line code is intended for use with IR and RF SAW modules (disabled per default)
 It will slow down your baudrate in half but improves clock recovery and signal quality.
 
+### Instructions for Arduino IDE builds
+
+###### Clone this repository into your sketches directory
+
+$ git clone https://gitlab.com/swilwerth/rc_vehicle.git
+
+###### Rename rc_vehicle/main.h to rc_vehicle/rc_vehicle.ino
+
+$ mv rc_vehicle/main.h rc_vehicle/rc_vehicle.ino
+
+###### Delete main.cpp
+
+$ rm rc_vehicle/main.cpp
+
 ### TODO
 
 Link to main Android Bluetooth controller app 
