@@ -20,7 +20,14 @@ Connect nano/uno/micro trough usb serial port and execute
 
 $ make upload
 
-### Console (Manchester line coding) Optional if pty->passThru(false); in main.h
+### Console (Manchester line coding) Optional if mapSerial->setDirect(false); in main.h
 
 $ python console/console.py
+
+Manchester line code is intended for use with IR and RF SAW modules (disabled per default)
+It will slow down your baudrate in half but improves clock recovery and signal quality.
+
+###TODO
+Link to main Android Bluetooth controller app 
+
 
