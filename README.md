@@ -7,7 +7,7 @@ Select your board editing the BOARD_TAG in MakeFile
 As an example:
     BOARD_TAG = nano328
 
-$ make list 
+$ make show_boards 
 
 To show all the supported boards
 
