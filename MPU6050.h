@@ -10,8 +10,8 @@
 #include "MapSerial.h"
 #define MPU_ERROR_SAMPLES 200
 
-
 #define DEFMPUADDR 0x68
+
 class MPU6050: public MapSerial {
     public:
         MPU6050(Manchester *s);
@@ -31,16 +31,16 @@ class MPU6050: public MapSerial {
         void logPRY();
         void logYaw();
         void logErrors();
-        float getYaw() { return yaw; }
+        float getYaw() { return gyroAngleZ; }
 
     private:
         int addr;
         char mode;
         float AccX, AccY, AccZ;
         float GyroX, GyroY, GyroZ;
-        float accAngleX, accAngleY, gyroAngleX, gyroAngleY, gyroAngleZ;
+        float accPitch, accRoll, accYaw, gyroAngleX, gyroAngleY, gyroAngleZ;
         float roll, pitch, yaw;
-        float AccErrorX, AccErrorY, GyroErrorX, GyroErrorY, GyroErrorZ;
+        float AccErrorX, AccErrorY, AccErrorYaw, GyroErrorX, GyroErrorY, GyroErrorZ;
         float elapsedTime, currentTime, previousTime;
         int c;
 };

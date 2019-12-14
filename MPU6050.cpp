@@ -16,8 +16,12 @@ void MPU6050::setup(int a) {
     gyroAngleX = 0;
     gyroAngleY = 0;
     gyroAngleZ = 0;
-    accAngleX = 0;
-    accAngleY = 0;
+    accPitch = 0;
+    accRoll = 0;
+    accYaw = 0;
+    AccErrorYaw = 0;
+    AccErrorY = 0;
+    AccErrorX = 0;
     pitch=0;
     roll=0;
     yaw=0;
@@ -32,7 +36,6 @@ void MPU6050::init() {
     Wire.endTransmission(true);        //end the transmission
     reconfSens();
     calculate_IMU_error();
-    delay(200);
 }
 
 void MPU6050::accelSens(char fs_sel) {
@@ -93,9 +96,21 @@ void MPU6050::pollAccel() {
     AccX = (Wire.read() << 8 | Wire.read()) / 16384.0; // X-axis value
     AccY = (Wire.read() << 8 | Wire.read()) / 16384.0; // Y-axis value
     AccZ = (Wire.read() << 8 | Wire.read()) / 16384.0; // Z-axis value
-    // Calculating Roll and Pitch from the accelerometer data
-    accAngleX = (atan(AccY / sqrt(pow(AccX, 2) + pow(AccZ, 2))) * 180 / PI); // - AccErrorX; // AccErrorX ~(0.58) See the calculate_IMU_error()custom function for more details
-    accAngleY = (atan(-1 * AccX / sqrt(pow(AccY, 2) + pow(AccZ, 2))) * 180 / PI); // - AccErrorY; // AccErrorY ~(-1.58)
+    AccX -= AccErrorX;
+    AccY -= AccErrorY;
+    AccZ -= AccErrorYaw;
+
+    accPitch = 180 * atan(AccY / sqrt(pow(AccX, 2) + pow(AccZ, 2))) / PI;
+
+    if(AccZ !=0)
+        accRoll  = 180 * atan(-AccX / AccZ) / PI;
+    else
+        accRoll = 0;
+
+    if(abs(AccX) > 0.1 && abs(AccY) > 0.1)
+        accYaw = 180 * atan(AccY / AccX) / PI;
+    else
+        accYaw = 0;
 }
 
 void MPU6050::pollGyro() {
@@ -115,84 +130,60 @@ void MPU6050::pollGyro() {
     GyroY -= GyroErrorY; // GyroErrorY
     GyroZ -= GyroErrorZ; // GyroErrorZ
     // Currently the raw values are in degrees per seconds, deg/s, so we need to multiply by sendonds (s) to get the angle in degrees
-    gyroAngleX = gyroAngleX + GyroX * elapsedTime; // deg/s * s = deg
-    gyroAngleY = gyroAngleY + GyroY * elapsedTime;
-
-    // Complementary filter - combine acceleromter and gyro angle values
-    float gain = 0.05;
-    float ygain = 0.05;
-    yaw = yaw + GyroZ * elapsedTime;
-
-    yaw = yaw > 0? yaw -(ygain * abs(GyroZ)): yaw + (ygain * abs(GyroZ));
-
-    float rollDrift = abs(gyroAngleX - accAngleX);
-    float pitchDrift = abs(gyroAngleY - accAngleY);
-    gyroAngleX = gyroAngleX > 0? gyroAngleX -(gain * rollDrift): gyroAngleX + (gain * rollDrift);
-    gyroAngleY = gyroAngleY > 0? gyroAngleY -(gain * pitchDrift): gyroAngleY + (gain * pitchDrift);
+    gyroAngleX += GyroX * elapsedTime; // deg/s * s = deg
+    gyroAngleY += GyroY * elapsedTime;
+    gyroAngleZ += GyroZ * elapsedTime;
 }
 
 void MPU6050::logYaw() {
-    mapSerial->printn("P", yaw);
+    //mapSerial->printn("P", gyroAngleZ);
 }
 
 void MPU6050::logPRY() {
     // Print the values on the serial monitor
     mapSerial->print("N");
-    mapSerial->print(gyroAngleX);
+    mapSerial->print(accPitch);
     mapSerial->print("O");
-    mapSerial->print(gyroAngleY);
+    mapSerial->print(accRoll);
     logYaw();
 }
 
 void MPU6050::logErrors() {
     // Print the error values on the Serial Monitor
-    mapSerial->printn("|AccErrorX:", AccErrorX);
-    mapSerial->printn("|AccErrorY:", AccErrorY);
+    mapSerial->printn("|AccErrorX:",  AccErrorX);
+    mapSerial->printn("|AccErrorY:",  AccErrorY);
+    mapSerial->printn("|AccErrorYaw:",  AccErrorYaw);
     mapSerial->printn("|GyroErrorX:", GyroErrorX);
     mapSerial->printn("|GyroErrorY:", GyroErrorY);
     mapSerial->printn("|GyroErrorZ:", GyroErrorZ);
 }
 
 void MPU6050::calculate_IMU_error() {
-    // We can call this funtion in the setup section to calculate the accelerometer and gyro data error. From here we will get the error values used in the above equations printed on the Serial Monitor.
-    // Note that we should place the IMU flat in order to get the proper values, so that we then can the correct values
-    // Read accelerometer values 200 times
+    c=0;
+    while (c < MPU_ERROR_SAMPLES) {
+        pollAccel();
+        AccErrorX += AccX;
+        AccErrorY += AccY;
+        AccErrorYaw += AccZ;
+        c++;
+        delay(5);
+    }
 
-    while (c < MPU_ERROR_SAMPLES) {
-        Wire.beginTransmission(addr);
-        Wire.write(0x3B);
-        Wire.endTransmission(false);
-        Wire.requestFrom(addr, 6, true);
-        AccX = (Wire.read() << 8 | Wire.read()) / 16384.0 ;
-        AccY = (Wire.read() << 8 | Wire.read()) / 16384.0 ;
-        AccZ = (Wire.read() << 8 | Wire.read()) / 16384.0 ;
-        // Sum all readings
-        AccErrorX = AccErrorX + ((atan((AccY) / sqrt(pow((AccX), 2) + pow((AccZ), 2))) * 180 / PI));
-        AccErrorY = AccErrorY + ((atan(-1 * (AccX) / sqrt(pow((AccY), 2) + pow((AccZ), 2))) * 180 / PI));
-        c++;
-    }
-    //Divide the sum by 200 to get the error value
-    AccErrorX = AccErrorX / MPU_ERROR_SAMPLES;
-    AccErrorY = AccErrorY / MPU_ERROR_SAMPLES;
+    AccErrorX /= (float) MPU_ERROR_SAMPLES;
+    AccErrorY /= (float) MPU_ERROR_SAMPLES;
+    AccErrorYaw /= (float) MPU_ERROR_SAMPLES;
     c = 0;
-    // Read gyro values 200 times
     while (c < MPU_ERROR_SAMPLES) {
-        Wire.beginTransmission(addr);
-        Wire.write(0x43);
-        Wire.endTransmission(false);
-        Wire.requestFrom(addr, 6, true);
-        GyroX = Wire.read() << 8 | Wire.read();
-        GyroY = Wire.read() << 8 | Wire.read();
-        GyroZ = Wire.read() << 8 | Wire.read();
-        // Sum all readings
-        GyroErrorX = GyroErrorX + (GyroX / 131.0);
-        GyroErrorY = GyroErrorY + (GyroY / 131.0);
-        GyroErrorZ = GyroErrorZ + (GyroZ / 131.0);
+        pollGyro();
+        GyroErrorX += GyroX;
+        GyroErrorY += GyroY;
+        GyroErrorZ += GyroZ;
         c++;
+        delay(5);
     }
     //Divide the sum by 200 to get the error value
-    GyroErrorX = GyroErrorX / MPU_ERROR_SAMPLES;
-    GyroErrorY = GyroErrorY / MPU_ERROR_SAMPLES;
-    GyroErrorZ = GyroErrorZ / MPU_ERROR_SAMPLES;
+    GyroErrorX /= (float) MPU_ERROR_SAMPLES;
+    GyroErrorY /= (float) MPU_ERROR_SAMPLES;
+    GyroErrorZ /= (float) MPU_ERROR_SAMPLES;
     logErrors();
 }
