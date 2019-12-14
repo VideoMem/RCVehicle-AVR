@@ -175,11 +175,11 @@ float rotationSpeed() {
 
 void tractionControl() {
     if(noControl) return;
-    float scale = 2;
-    float rAngle = rotationSpeed() * maxRotationSpeed * scale;
-    float tYaw = lastYaw - MPU->getYaw();
+    //float scale = 2;
+    float dAngle = rotationSpeed() * maxRotationSpeed; // * scale;
+    float dYaw = lastYaw - MPU->getYaw();
     float gain = 10;
-    float drift = (rAngle - tYaw) * gain;
+    float drift = (dAngle - dYaw) * gain;
     int u = code.u;
     int v = code.v;
 
@@ -205,6 +205,7 @@ void tractionDrive() {
         lastYaw = MPU->getYaw();
         lastTangle = tractionAngle();
         MPU->poll();
+        if(GYRO_ENABLED) tractionControl();
         mpuTimer.reset();
     }
     mpuTimer.update();
@@ -272,8 +273,6 @@ void caterpillarDrive() {
     } else {
         busy=1;
     }
-
-    if(GYRO_ENABLED) tractionControl();
     updateMotors();
 }
 
