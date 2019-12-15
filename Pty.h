@@ -3,6 +3,11 @@
 #include "MapSerial.h"
 #include "StringBuffer.h"
 
+struct T_twoAxis {
+    int u;
+    int v;
+};
+
 class T_gcode {
     public:
     T_gcode() { blank(); }

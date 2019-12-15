@@ -25,30 +25,33 @@
 #define RKICK   11  //Kick Servo PWM pin
 
 #define BOOT_DELAY 100
-#define NO_ERROR 500        //led blinking intervals
-#define ON_ERROR 250        //
+#define NO_ERROR 500             //led blinking intervals
+#define ON_ERROR 250             //
 #define MINUTE 60
-#define BAUDRATE 9600       //default baudrate of the serial port
+#define BAUDRATE 9600            //default baudrate of the serial port
+#define MPU_SAMPLING_INTERVAL 50
 
 const unsigned char ledPin = 13;    // LED connected to digital pin 13
 static unsigned char busy = 0;
 
 //start of globals
 
-float lastTangle;
-float lastYaw;
-bool noControl;
-Timer mpuTimer;
 Timer blinkTimer;
 Manchester* mapSerial = new Manchester();
 Battery battery(mapSerial);
 Pty* pty = new Pty(mapSerial);
 T_gcode code;
 Toggle blinker;
+
 BangServo servoMotorA;
 BangServo servoMotorB;
+
 MPU6050* MPU = new MPU6050(mapSerial);
+float lastYaw;
+bool noControl;
+Timer mpuTimer;
 float maxRotationSpeed;
+T_twoAxis error;
 
 //main app procedures
 
@@ -62,20 +65,28 @@ void stopAll() {
 }
 
 void updateMotors() {
-    if(code.u > 0) {
+    int newu = code.u + error.u;
+    int newv = code.v + error.v;
+
+    newu = newu >  0xFF?  0xFF: newu;
+    newu = newu < -0xFF? -0xFF: newu;
+    newv = newv >  0xFF?  0xFF: newv;
+    newv = newv < -0xFF? -0xFF: newv;
+
+    if(newu > 0) {
         digitalWrite(UDIRF,1); digitalWrite(UDIRR, 0);
-        analogWrite(UPOWER, code.u);
+        analogWrite(UPOWER, newu);
     } else {
         digitalWrite(UDIRF,0); digitalWrite(UDIRR, 1);
-        analogWrite(UPOWER, -code.u);
+        analogWrite(UPOWER, -newu);
     }
 
-    if(code.v > 0) {
+    if(newv > 0) {
         digitalWrite(VDIRF,1); digitalWrite(VDIRR, 0);
-        analogWrite(VPOWER, code.v);
+        analogWrite(VPOWER, newv);
     } else {
         digitalWrite(VDIRF,0); digitalWrite(VDIRR, 1);
-        analogWrite(VPOWER, -code.v);
+        analogWrite(VPOWER, -newv);
     }
 }
 
@@ -86,30 +97,32 @@ void getMaxRotationSpeed() {
     code.v = -0xFF;
     updateMotors();
     delay(500);
-    for(int i= 0; i < 200; ++i) {
+    for(int i= 0; i < 100; ++i) {
         lastYaw = MPU->getYaw();
         MPU->poll();
         speed += abs(lastYaw - MPU->getYaw());
-        delay(10);
+        delay(MPU_SAMPLING_INTERVAL);
     }
-
+    code.u = 0;
+    code.v = 0;
+    updateMotors();
+    delay(200);
     code.u = -0xFF;
     code.v = 0xFF;
     updateMotors();
     delay(500);
-    for(int i= 0; i < 200; ++i) {
+    for(int i= 0; i < 100; ++i) {
         lastYaw = MPU->getYaw();
         MPU->poll();
         speed += abs(lastYaw - MPU->getYaw());
-        delay(10);
+        delay(MPU_SAMPLING_INTERVAL);
     }
 
-    maxRotationSpeed = abs(speed / 400);
+    maxRotationSpeed = abs(speed / 200);
     code.u = 0;
     code.v = 0;
     updateMotors();
 }
-
 
 void setup() {
     pinMode(VBATPIN, INPUT);  //vbat
@@ -134,10 +147,11 @@ void setup() {
 	blinkTimer.setMS(NO_ERROR);
     battery.check();
     noControl = false;
+    error.u = 0;
+    error.v = 0;
     if(GYRO_ENABLED) {
         MPU->setup();
-        mpuTimer.setMS(50);
-        lastTangle = 0;
+        mpuTimer.setMS(MPU_SAMPLING_INTERVAL);
         lastYaw = 0;
         maxRotationSpeed = 0;
         getMaxRotationSpeed();
@@ -173,37 +187,23 @@ float rotationSpeed() {
     return tractionNorm() * sin(asRAD(tractionAngle()));
 }
 
+float rotSPDError() {
+    float dAngle = -rotationSpeed() * maxRotationSpeed; // * scale;
+    float dYaw = lastYaw - MPU->getYaw();
+    float gain = 5;
+    return (dAngle - dYaw) * gain;
+}
+
 void tractionControl() {
     if(noControl) return;
-    //float scale = 2;
-    float dAngle = rotationSpeed() * maxRotationSpeed; // * scale;
-    float dYaw = lastYaw - MPU->getYaw();
-    float gain = 10;
-    float drift = (dAngle - dYaw) * gain;
-    int u = code.u;
-    int v = code.v;
-
-    if (drift > 0) {
-        u += abs(round(drift));
-        v -= abs(round(drift));
-    } else {
-        u -= abs(round(drift));
-        v += abs(round(drift));
-    }
-
-    if(u > 255) u = 255;
-    if(v > 255) v = 255;
-    if(u < -255) u = -255;
-    if(v < -255) v = -255;
-
-    code.u = u;
-    code.v = v;
+    float drift = rotSPDError();
+    error.u += round(drift);
+    error.v += -round(drift);
 }
 
 void tractionDrive() {
     if(mpuTimer.event()) {
         lastYaw = MPU->getYaw();
-        lastTangle = tractionAngle();
         MPU->poll();
         if(GYRO_ENABLED) tractionControl();
         mpuTimer.reset();
@@ -212,7 +212,7 @@ void tractionDrive() {
 }
 
 void ledDrive() {
-    if(blinker.value() == true)
+    if(blinker.value())
         digitalWrite(ledPin, HIGH);   // set the LED on
     else
         digitalWrite(ledPin, LOW);    // set the LED off
@@ -260,7 +260,7 @@ void batteryDrive() {
         mapSerial->print("B");
         battery.check();
         //battery.logValue();
-        mapSerial->print(maxRotationSpeed);
+        mapSerial->print(rotSPDError());
         pty->flush();
     }
 }
@@ -277,10 +277,10 @@ void caterpillarDrive() {
 }
 
 void bitPrint(bool bit) {
-    bit == true? mapSerial->print("1\r\n"): mapSerial->print("0\r\n");
+    bit? mapSerial->print("1\r\n"): mapSerial->print("0\r\n");
 }
 
-void sendFWCapabilites() {
+void sendFWCapabilities() {
     mapSerial->print("|SERVO:"); bitPrint(SERVO_ENABLED);
     mapSerial->print("|GYRO:"); bitPrint(GYRO_ENABLED);
     pty->resetMcode();
@@ -306,10 +306,10 @@ void loop() {
     batteryDrive();
     if(SERVO_ENABLED) servoDrive();
     if(GYRO_ENABLED)  gyroDrive();
-    if(code.m == 99)  sendFWCapabilites();
+    if(code.m == 99)  sendFWCapabilities();
     if(code.m == 100) sendFWErr();
     if(code.m == 101) recalibrateIMU();
-    if(code.m == 20) { noControl = true; pty->resetMcode(); }
+    if(code.m == 20) { noControl = true; error.u =0; error.v =0; pty->resetMcode(); }
     if(code.m == 21) { noControl = false; pty->resetMcode(); }
     tractionDrive();
     caterpillarDrive();
