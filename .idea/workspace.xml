@@ -9,11 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.h" beforeDir="false" afterPath="$PROJECT_DIR$/main.h" afterDir="false" />
-    </list>
+    <list default="true" id="33c28520-9d97-4817-a9dd-eb923bacc15b" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,6 +116,7 @@
       <workItem from="1534070837723" duration="1263000" />
       <workItem from="1576403407367" duration="231000" />
       <workItem from="1576403672820" duration="195000" />
+      <workItem from="1576403879768" duration="6413000" />
     </task>
     <servers />
   </component>
@@ -141,6 +138,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/rc_vehicle" />
+    </ignored-roots>
   </component>
   <component name="masterDetails">
     <states>

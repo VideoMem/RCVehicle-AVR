@@ -259,8 +259,8 @@ void batteryDrive() {
     if(pty->getLast() == 98) { //B
         mapSerial->print("B");
         battery.check();
-        //battery.logValue();
-        mapSerial->print(rotSPDError());
+        battery.logValue();
+        //mapSerial->print(rotSPDError());
         pty->flush();
     }
 }
