@@ -190,7 +190,7 @@ float rotationSpeed() {
 float rotSPDError() {
     float dAngle = -rotationSpeed() * maxRotationSpeed; // * scale;
     float dYaw = lastYaw - MPU->getYaw();
-    float gain = 5;
+    float gain = 15;
     return (dAngle - dYaw) * gain;
 }
 
@@ -269,7 +269,6 @@ void batteryDrive() {
 void caterpillarDrive() {
     if(code.u == 0 && code.v == 0) {
         busy=0;
-        stopAll();
     } else {
         busy=1;
     }
