@@ -27,7 +27,6 @@ void Battery::logAlarm() {
     mapSerial->print("vBat LOW!\r\n");
 }
 
-
 void Battery::logValue() {
     //mapSerial->print("vBat: ");
     mapSerial->print(vBat);

@@ -46,8 +46,9 @@ Toggle blinker;
 BangServo servoMotorA;
 BangServo servoMotorB;
 
-MPU6050* MPU = new MPU6050(mapSerial);
+MPU6050* IMU = new MPU6050(mapSerial);
 float lastYaw;
+float yawGain;
 bool noControl;
 Timer mpuTimer;
 float maxRotationSpeed;
@@ -92,15 +93,15 @@ void updateMotors() {
 
 void getMaxRotationSpeed() {
     float speed;
-
+    yawGain = 15;
     code.u = 0xFF;
     code.v = -0xFF;
     updateMotors();
     delay(500);
     for(int i= 0; i < 100; ++i) {
-        lastYaw = MPU->getYaw();
-        MPU->poll();
-        speed += abs(lastYaw - MPU->getYaw());
+        lastYaw = IMU->getYaw();
+        IMU->poll();
+        speed += abs(lastYaw - IMU->getYaw());
         delay(MPU_SAMPLING_INTERVAL);
     }
     code.u = 0;
@@ -112,9 +113,9 @@ void getMaxRotationSpeed() {
     updateMotors();
     delay(500);
     for(int i= 0; i < 100; ++i) {
-        lastYaw = MPU->getYaw();
-        MPU->poll();
-        speed += abs(lastYaw - MPU->getYaw());
+        lastYaw = IMU->getYaw();
+        IMU->poll();
+        speed += abs(lastYaw - IMU->getYaw());
         delay(MPU_SAMPLING_INTERVAL);
     }
 
@@ -150,7 +151,7 @@ void setup() {
     error.u = 0;
     error.v = 0;
     if(GYRO_ENABLED) {
-        MPU->setup();
+        IMU->setup();
         mpuTimer.setMS(MPU_SAMPLING_INTERVAL);
         lastYaw = 0;
         maxRotationSpeed = 0;
@@ -189,9 +190,8 @@ float rotationSpeed() {
 
 float rotSPDError() {
     float dAngle = -rotationSpeed() * maxRotationSpeed; // * scale;
-    float dYaw = lastYaw - MPU->getYaw();
-    float gain = 15;
-    return (dAngle - dYaw) * gain;
+    float dYaw = lastYaw - IMU->getYaw();
+    return (dAngle - dYaw) * yawGain;
 }
 
 void tractionControl() {
@@ -203,8 +203,8 @@ void tractionControl() {
 
 void tractionDrive() {
     if(mpuTimer.event()) {
-        lastYaw = MPU->getYaw();
-        MPU->poll();
+        lastYaw = IMU->getYaw();
+        IMU->poll();
         if(GYRO_ENABLED) tractionControl();
         mpuTimer.reset();
     }
@@ -235,7 +235,7 @@ void errorDrive() {
 
 void gyroDrive() {
     if (code.m == 10) {
-        MPU->logPRY();
+        IMU->logPRY();
         mapSerial->printn("P", rotationSpeed() - lastYaw);
         pty->resetMcode();
     }
@@ -259,8 +259,8 @@ void batteryDrive() {
     if(pty->getLast() == 98) { //B
         mapSerial->print("B");
         battery.check();
-        battery.logValue();
-        //mapSerial->print(rotSPDError());
+        //battery.logValue();
+        mapSerial->print(yawGain);
         pty->flush();
     }
 }
@@ -286,12 +286,17 @@ void sendFWCapabilities() {
 }
 
 void sendFWErr() {
-    MPU->logErrors();
+    IMU->logErrors();
     pty->resetMcode();
 }
 
 void recalibrateIMU() {
-    MPU->calculate_IMU_error();
+    IMU->calculate_IMU_error();
+    pty->resetMcode();
+}
+
+void setYawGain() {
+    yawGain = (float) code.s / 100.0;
     pty->resetMcode();
 }
 
@@ -309,7 +314,8 @@ void loop() {
     if(code.m == 100) sendFWErr();
     if(code.m == 101) recalibrateIMU();
     if(code.m == 20) { noControl = true; error.u =0; error.v =0; pty->resetMcode(); }
-    if(code.m == 21) { noControl = false; pty->resetMcode(); }
+    if(code.m == 21) { noControl = false; }
+    if(code.m == 21 && code.s > 0) setYawGain();
     tractionDrive();
     caterpillarDrive();
 }
