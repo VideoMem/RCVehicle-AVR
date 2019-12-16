@@ -19,7 +19,7 @@ bool Battery::alarm() {
 
 void Battery::check() {
     int aux = analogRead(VBATPIN);
-    vBat = 8.4 * (float) aux / 1023.0;
+    vBat = 8.46 * (float) aux / 1023.0;
     //logValue();
 }
 
