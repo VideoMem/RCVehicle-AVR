@@ -31,7 +31,7 @@ It will slow down your baudrate in half but improves clock recovery and signal q
 
 ###### Clone this repository into your sketches directory
 
-$ git clone https://gitlab.com/swilwerth/rc_vehicle.git
+$ git clone https://github.com/VideoMem/RCVehicle-AVR.git
 
 ###### Rename rc_vehicle/main.h to rc_vehicle/rc_vehicle.ino
 
